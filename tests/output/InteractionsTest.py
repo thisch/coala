@@ -12,11 +12,14 @@ class InteractionsTest(unittest.TestCase):
     def test_(self):
         log_printer = LogPrinter(NullPrinter())
         section = Section('')
-        self.assertRaises(TypeError, fail_acquire_settings, log_printer, None,
-                          section)
-        self.assertRaises(AssertionError,
-                          fail_acquire_settings,
-                          log_printer,
-                          {'setting': ['description', 'bear']}, section)
+        with self.assertRaisesRegex(TypeError,
+                                    'The settings_names_dict parameter has to '
+                                    'be a dictionary.'):
+            fail_acquire_settings(log_printer, None, section)
+        with self.assertRaisesRegex(
+                AssertionError, r'(?m).*\nsetting \(from bear\) - description'):
+            fail_acquire_settings(log_printer,
+                                  {'setting': ['description', 'bear']},
+                                  section)
         self.assertEqual(fail_acquire_settings(log_printer, {}, section), None,
                          section)

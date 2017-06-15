@@ -21,7 +21,8 @@ class GlobalBearTest(unittest.TestCase):
 
     def test_run_raises(self):
         bear = GlobalBear(None, Section(''), None)
-        self.assertRaises(NotImplementedError, bear.run)
+        with self.assertRaisesRegex(NotImplementedError, ''):
+            bear.run()
 
     def test_kind_is_staticmethod(self):
         self.assertEqual(GlobalBear.kind(), BEAR_KIND.GLOBAL)

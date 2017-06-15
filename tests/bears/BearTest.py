@@ -184,12 +184,20 @@ class BearTest(BearTestBase):
                 aspectsTestBear.aspects['fix'])
 
     def test_simple_api(self):
-        self.assertRaises(TypeError, TestBear, self.settings, 2)
-        self.assertRaises(TypeError, TestBear, None, self.queue)
-        self.assertRaises(NotImplementedError, Bear.kind)
+        with self.assertRaisesRegex(
+                TypeError,
+                'message_queue has to be a Queue or None.'):
+            TestBear(self.settings, 2)
+        with self.assertRaisesRegex(
+                TypeError,
+                r"section must be an instance of one of \(<class '.*.Section'>,\).*"):
+            TestBear(None, self.queue)
+        with self.assertRaisesRegex(NotImplementedError, '^$'):
+            Bear.kind()
 
         base = Bear(self.settings, None)
-        self.assertRaises(NotImplementedError, base.run)
+        with self.assertRaisesRegex(NotImplementedError, '^$'):
+            base.run()
         self.assertEqual(base.get_non_optional_settings(), {})
 
     def test_message_queue(self):

@@ -81,18 +81,28 @@ class BearTest(unittest.TestCase):
                 shutil.rmtree(bear.data_dir)
 
     def test_invalid_types_at_instantiation(self):
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(
+                TypeError,
+                r"file_dict must be an instance of one of \(<class 'dict'>,\) "
+                r"\(provided value: 2\)"):
             Bear(Section('test-section'), 2)
 
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(
+                TypeError,
+                r"section must be an instance of one of "
+                r"\(<class '.*.Section'>,\) \(provided value: None\)"):
             Bear(None, {})
 
     def test_analyze(self):
-        with self.assertRaises(NotImplementedError):
+        with self.assertRaisesRegex(
+                NotImplementedError,
+                'This function has to be implemented for a runnable bear.'):
             Bear(Section('test-section'), {}).analyze()
 
     def test_generate_tasks(self):
-        with self.assertRaises(NotImplementedError):
+        with self.assertRaisesRegex(
+                NotImplementedError,
+                'This function has to be implemented for a runnable bear.'):
             Bear(Section('test-section'), {}).generate_tasks()
 
     def test_execute_task(self):
@@ -127,23 +137,19 @@ class BearTest(unittest.TestCase):
         BearWithPrerequisitesOverride(section, filedict)
 
         BearWithPrerequisitesOverride.prerequisites_fulfilled = False
-        with self.assertRaises(RuntimeError) as cm:
+        with self.assertRaisesRegex(
+                RuntimeError,
+                'The bear BearWithPrerequisitesOverride does not fulfill all '
+                'requirements.'):
             BearWithPrerequisitesOverride(section, filedict)
-
-        self.assertEqual(
-            str(cm.exception),
-            'The bear BearWithPrerequisitesOverride does not fulfill all '
-            'requirements.')
 
         BearWithPrerequisitesOverride.prerequisites_fulfilled = (
             'This is on purpose due to running inside a test.')
-        with self.assertRaises(RuntimeError) as cm:
-            BearWithPrerequisitesOverride(section, filedict)
-
-        self.assertEqual(
-            str(cm.exception),
+        with self.assertRaisesRegex(
+            RuntimeError,
             'The bear BearWithPrerequisitesOverride does not fulfill all '
-            'requirements. This is on purpose due to running inside a test.')
+            'requirements. This is on purpose due to running inside a test.'):
+            BearWithPrerequisitesOverride(section, filedict)
 
     def test_get_metadata(self):
         uut = BearWithAnalysis.get_metadata()

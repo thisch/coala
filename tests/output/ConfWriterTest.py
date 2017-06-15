@@ -58,7 +58,8 @@ class ConfWriterTest(unittest.TestCase):
         os.remove(self.write_file_name)
 
     def test_exceptions(self):
-        self.assertRaises(TypeError, self.uut.write_section, 5)
+        with self.assertRaisesRegex(TypeError, '^$'):
+            self.uut.write_section(5)
 
     def test_write(self):
         result_file = ['[Section]\n',

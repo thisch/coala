@@ -172,8 +172,10 @@ class ConsoleInteractionTest(unittest.TestCase):
 
     def test_require_settings(self):
         curr_section = Section('')
-        self.assertRaises(TypeError, acquire_settings,
-                          self.log_printer, 0, curr_section)
+        with self.assertRaisesRegex(
+                TypeError, 'The settings_names_dict parameter has to be a '
+                'dictionary.'):
+            acquire_settings(self.log_printer, 0, curr_section)
 
         with simulate_console_inputs('n', 'a', 'o') as generator:
             self.assertEqual(acquire_settings(self.log_printer,

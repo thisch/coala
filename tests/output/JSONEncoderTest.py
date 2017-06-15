@@ -106,5 +106,6 @@ class JSONEncoderTest(unittest.TestCase):
         self.assertEqual('["dont", "panic"]', json.dumps(uut, **self.kw))
 
     def test_type_error(self):
-        with self.assertRaises(TypeError):
+        with self.assertRaisesRegex(TypeError, "Object of type 'complex' is "
+                                    "not JSON serializable"):
             json.dumps(1j, **self.kw)
